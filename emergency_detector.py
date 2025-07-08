@@ -81,9 +81,14 @@ def is_emergency_openai(text: str) -> bool:
     try:
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",  # Or "gpt-4" for higher accuracy
+            model="gpt-4o",  # Upgrading to the latest model for better reasoning
             messages=[
-                {"role": "system", "content": "You are an emergency triage system. Your task is to identify immediate, life-threatening emergencies OR situations requiring urgent medical attention. Respond with the single word 'EMERGENCY' if the text mentions things like being trapped, fire, serious injury, can't breathe, heart attack, stroke, or a critical need for medical equipment/treatment like dialysis or oxygen. For all other cases, respond with the single word 'OK'."},
+                {"role": "system", "content": """You are an emergency triage system. Your task is to identify situations requiring urgent help. Respond with the single word 'EMERGENCY' for any of the following cases:
+- Direct threats to life (trapped, fire, can't breathe, heart attack, stroke).
+- Urgent medical needs (dialysis, oxygen).
+- Urgent need for life-sustaining supplies (baby formula, essential medication).
+
+For all other requests (like requests for information, water, or non-critical supplies), respond with the single word 'OK'."""},
                 {"role": "user", "content": text}
             ],
             max_tokens=10,
