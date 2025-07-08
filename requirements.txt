@@ -1,0 +1,3 @@
+arcgis
+openai
+python-dotenv 
